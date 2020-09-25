@@ -1,0 +1,21 @@
+{
+  // Javascript
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true
+  },
+  // TypeScript
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true
+  },
+  // JSON
+  "[json]": {
+    "editor.formatOnSave": true,
+    "files.insertFinalNewline": true
+  }
+}
