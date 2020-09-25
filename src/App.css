@@ -1,13 +1,16 @@
 .AppContainer {
-  text-align: center;
+  background-color: #222222;
 }
 
-.box {
-  border-color: yellow;
-  border-radius: 0px;
-  border: 5 5 5 5;
-  border-width: 5px;
-  background-color: red;
-  height: 100px;
-  width: 100px;
+.layout {
+  background-color: #bbeffd;
+  border: 1px solid #61dafb;
+}
+
+.u-VerticalCenter {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
 }

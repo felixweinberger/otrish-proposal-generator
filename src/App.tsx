@@ -6,22 +6,37 @@ import Col from "react-bootstrap/Col";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
-function App() {
+const App = () => {
   return (
-    <div className="AppContainer">
-      <Container>
+    <div className="AppContainer u-VerticalCenter">
+      <Container fluid="md">
         <Row>
-          <Col>1 of 2</Col>
-          <Col>2 of 2</Col>
+          <Col className="layout">
+            <Row>
+              <Col>Type</Col>
+            </Row>
+            <Row>
+              <Col>Length</Col>
+            </Row>
+            <Row>
+              <Col>Thickness</Col>
+            </Row>
+            <Row>
+              <Col>Diameter</Col>
+            </Row>
+            <Row>
+              <Col>Amount</Col>
+            </Row>
+          </Col>
+          <Col className="layout">Items</Col>
         </Row>
         <Row>
-          <Col>1 of 3</Col>
-          <Col>2 of 3</Col>
-          <Col>3 of 3</Col>
+          <Col className="layout">Submit description</Col>
+          <Col className="layout">Submit button</Col>
         </Row>
       </Container>
     </div>
   );
-}
+};
 
 export default App;
