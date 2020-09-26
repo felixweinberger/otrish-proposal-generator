@@ -3,6 +3,7 @@ import Select from "react-select";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 
 import otrishLogo from "./images/otrish-logo.png";
+import { getDeliveryCost } from "./utils/deliveryCost";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -37,28 +38,27 @@ interface FormState {
   units?: number;
 }
 
-const getWeight = (diameterMm: number, thicknessMm: number): number => {
-  return (diameterMm - thicknessMm) * thicknessMm * 0.0246615;
+const getWeight = (
+  diameterMm: number,
+  thicknessMm: number,
+  lengthMm: number
+): number => {
+  return (
+    (lengthMm / 1000) * (diameterMm - thicknessMm) * thicknessMm * 0.0246615
+  );
 };
 
 const getOrderItemWeight = (orderItem: OrderItem): number => {
   return (
-    getWeight(orderItem.diameterMm, orderItem.thicknessMm) * orderItem.units
+    getWeight(orderItem.diameterMm, orderItem.thicknessMm, orderItem.lengthMm) *
+    orderItem.units
   );
 };
 
 const getOrderItemCost = (orderItem: OrderItem): number => {
   const itemWeight = getOrderItemWeight(orderItem);
+  console.log(">>> orderItem", orderItem);
   return (itemWeight * orderItem.quality.priceCents) / 100;
-};
-
-const getDeliveryCost = (
-  totalWeightKg: number,
-  postCode: string,
-  shouldDeliver: boolean
-): number => {
-  if (!shouldDeliver) return 0;
-  return 1000;
 };
 
 const isValidFormState = (formState: FormState): boolean => {
@@ -84,23 +84,34 @@ const FormItemSummary: React.FC<{ item: FormState }> = ({ item }) => {
   }
 
   const totalLengthMeters = (item.lengthMm * item.units) / 1000;
-  const totalWeight = getWeight(item.diameterMm, item.thicknessMm) * item.units;
+  const totalWeight =
+    getWeight(item.diameterMm, item.thicknessMm, item.lengthMm) * item.units;
   const totalPrice = (totalWeight * item.quality.priceCents) / 100;
 
   return (
     <>
       <hr />
-      <div>Total length: {totalLengthMeters.toFixed(2)} m</div>
-      <div>
-        Total weight: {totalWeight.toFixed(2)} {item.quality.unit}
+      <div className="OrderSummaryRow-container">
+        <div>Total length:</div>
+        <div>{totalLengthMeters.toFixed(2)} m</div>
       </div>
-      <div>Total price: € {totalPrice.toFixed(2)}</div>
+      <div className="OrderSummaryRow-container">
+        <div>Total weight:</div>
+        <div>
+          {totalWeight.toFixed(2)} {item.quality.unit}
+        </div>
+      </div>
+      <div className="OrderSummaryRow-container">
+        <div>Price:</div>
+        <div>€ {totalPrice.toFixed(2)}</div>
+      </div>
     </>
   );
 };
 
 const OrderItemDisplay: React.FC<{ item: OrderItem }> = ({ item }) => {
-  const totalWeight = getWeight(item.diameterMm, item.thicknessMm) * item.units;
+  const totalWeight =
+    getWeight(item.diameterMm, item.thicknessMm, item.lengthMm) * item.units;
   const totalPrice = (totalWeight * item.quality.priceCents) / 100;
   return (
     <div className="OrderSummaryRow-container">
@@ -134,7 +145,7 @@ const TotalPriceDisplay: React.FC<{
     shouldDeliver
   );
 
-  const totalCost = totalMaterialCost + totalDeliveryCost;
+  const totalCost = totalMaterialCost + (totalDeliveryCost ?? 0);
 
   return (
     <>
@@ -147,7 +158,7 @@ const TotalPriceDisplay: React.FC<{
         <div>Weight:</div>
         <div>{totalWeight.toFixed(2)} Kg</div>
       </div>
-      {shouldDeliver && (
+      {shouldDeliver && totalDeliveryCost && (
         <div className="OrderSummaryRow-container">
           <div>Delivery:</div>
           <div>€ {totalDeliveryCost.toFixed(2)}</div>
@@ -157,6 +168,7 @@ const TotalPriceDisplay: React.FC<{
         <div>Total:</div>
         <div>€ {totalCost.toFixed(2)}</div>
       </div>
+      <hr />
     </>
   );
 };
@@ -310,6 +322,7 @@ const App = () => {
                       <Form.Control
                         type="string"
                         onChange={handlePostCodeChange}
+                        maxLength={4}
                       />
                     </InputGroup>
                   </Col>
