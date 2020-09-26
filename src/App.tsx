@@ -1,4 +1,5 @@
 import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import Select from "react-select";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -22,11 +23,11 @@ const App = () => {
   const [currentItem, setCurrentItem] = useState<OrderItem>();
   const [orderItems, setOrderItems] = useState<Array<OrderItem>>();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    console.log(">>> e", e.target.value);
+  const handleChange = (something: any): void => {
+    console.log(">>> something", something);
   };
 
-  const qualityOptions: Quality[] = [
+  const qualities: Quality[] = [
     { label: "Bad", priceCents: 100, unit: "kg" },
     { label: "Normal", priceCents: 150, unit: "kg" },
     { label: "Nice", priceCents: 180, unit: "kg" },
@@ -34,12 +35,13 @@ const App = () => {
     { label: "Superduper", priceCents: 300, unit: "kg" },
   ];
 
-  // const renderQualityOptions = () =>
-  //   qualityOptions.map((quality) => (
-  //     <option value={quality}>
-  //       {quality.label} (€{quality.priceCents / 100}/{quality.unit})
-  //     </option>
-  //   ));
+  const qualityOptions = qualities.map((quality) => {
+    const price = (quality.priceCents / 100).toFixed(2);
+    return {
+      label: `${quality.label} (€${price}/${quality.unit})`,
+      value: quality,
+    };
+  });
 
   return (
     <div className="AppContainer u-VerticalCenter">
@@ -52,17 +54,7 @@ const App = () => {
                   Quality
                 </Form.Label>
                 <Col sm="8">
-                  <Form.Control
-                    as="select"
-                    defaultValue="Normal (€1.5 / kg)"
-                    onChange={handleChange}
-                  >
-                    <option>Bad (€1.00/kg)</option>
-                    <option>Normal (€1.50/kg)</option>
-                    <option>Nice (€1.80/kg)</option>
-                    <option>Super (€2.10/kg)</option>
-                    <option>Superduper (€3.00/kg)</option>
-                  </Form.Control>
+                  <Select options={qualityOptions} onChange={handleChange} />
                 </Col>
               </Form.Group>
 
