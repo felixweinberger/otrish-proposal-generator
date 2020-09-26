@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "01bb257de8c5c0aedcb479e2fe66cdb9",
+    "revision": "dbfceb747967c7d1c8acb328a2b46074",
     "url": "/otrish-proposal-generator/index.html"
   },
   {

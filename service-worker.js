@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/otrish-proposal-generator/precache-manifest.25af8398b720e8e24b38195b4d4b5705.js"
+  "/otrish-proposal-generator/precache-manifest.a8b17e008c0d15a41ab398778797b5af.js"
 );
 
 self.addEventListener('message', (event) => {
