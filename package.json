@@ -1,6 +1,6 @@
 {
   "name": "otrish-proposal-generator",
-  "homepage": "https://felixweinberger.github.io/otrish-proposal-manager",
+  "homepage": "https://felixweinberger.github.io/otrish-proposal-generator",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
