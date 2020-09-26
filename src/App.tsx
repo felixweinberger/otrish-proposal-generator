@@ -12,7 +12,7 @@ interface Quality {
 }
 
 interface OrderItem {
-  quality: Quality;
+  quality?: Quality;
   diameterMm?: number;
   thicknessMm?: number;
   lengthMm: number;
@@ -20,11 +20,39 @@ interface OrderItem {
 }
 
 const App = () => {
-  const [currentItem, setCurrentItem] = useState<OrderItem>();
+  const [currentItem, setCurrentItem] = useState<OrderItem>({
+    lengthMm: 1000,
+    units: 1,
+  });
   const [orderItems, setOrderItems] = useState<Array<OrderItem>>();
 
-  const handleChange = (something: any): void => {
-    console.log(">>> something", something);
+  const handleQualityChange = (event: any) => {
+    currentItem.quality = event.value;
+    setCurrentItem(currentItem);
+  };
+
+  const handleDiameterChange = (event: any) => {
+    event.preventDefault();
+    currentItem.diameterMm = Number(event.target.value);
+    setCurrentItem(currentItem);
+  };
+
+  const handleThicknessChange = (event: any) => {
+    event.preventDefault();
+    currentItem.thicknessMm = Number(event.target.value);
+    setCurrentItem(currentItem);
+  };
+
+  const handleLengthChange = (event: any) => {
+    event.preventDefault();
+    currentItem.lengthMm = Number(event.target.value);
+    setCurrentItem(currentItem);
+  };
+
+  const handleUnitsChange = (event: any) => {
+    event.preventDefault();
+    currentItem.units = Number(event.target.value);
+    setCurrentItem(currentItem);
   };
 
   const qualities: Quality[] = [
@@ -47,6 +75,9 @@ const App = () => {
     <div className="AppContainer u-VerticalCenter">
       <Container fluid="md">
         <Row>
+          <Col className="layout">Logo</Col>
+        </Row>
+        <Row>
           <Col className="layout">
             <Form className="AddItemForm">
               <Form.Group as={Row} controlId="addItemFormQuality">
@@ -54,7 +85,10 @@ const App = () => {
                   Quality
                 </Form.Label>
                 <Col sm="8">
-                  <Select options={qualityOptions} onChange={handleChange} />
+                  <Select
+                    options={qualityOptions}
+                    onChange={handleQualityChange}
+                  />
                 </Col>
               </Form.Group>
 
@@ -64,7 +98,11 @@ const App = () => {
                 </Form.Label>
                 <Col sm="8">
                   <InputGroup>
-                    <Form.Control type="number" />
+                    <Form.Control
+                      type="number"
+                      step="0.01"
+                      onChange={handleDiameterChange}
+                    />
                     <InputGroup.Append>
                       <InputGroup.Text id="basic-addon2">mm</InputGroup.Text>
                     </InputGroup.Append>
@@ -78,7 +116,11 @@ const App = () => {
                 </Form.Label>
                 <Col sm="8">
                   <InputGroup>
-                    <Form.Control type="number" />
+                    <Form.Control
+                      type="number"
+                      step="0.01"
+                      onChange={handleThicknessChange}
+                    />
                     <InputGroup.Append>
                       <InputGroup.Text id="basic-addon2">mm</InputGroup.Text>
                     </InputGroup.Append>
@@ -92,7 +134,11 @@ const App = () => {
                 </Form.Label>
                 <Col sm="8">
                   <InputGroup>
-                    <Form.Control type="number" placeholder="1000" />
+                    <Form.Control
+                      type="number"
+                      onChange={handleLengthChange}
+                      defaultValue={1000}
+                    />
                     <InputGroup.Append>
                       <InputGroup.Text id="basic-addon2">mm</InputGroup.Text>
                     </InputGroup.Append>
@@ -106,7 +152,11 @@ const App = () => {
                 </Form.Label>
                 <Col sm="8">
                   <InputGroup>
-                    <Form.Control type="number" placeholder="1" />
+                    <Form.Control
+                      type="number"
+                      onChange={handleUnitsChange}
+                      defaultValue={1}
+                    />
                     <InputGroup.Append>
                       <InputGroup.Text id="basic-addon2">units</InputGroup.Text>
                     </InputGroup.Append>
@@ -123,10 +173,6 @@ const App = () => {
             </Form>
           </Col>
           <Col className="layout">Items</Col>
-        </Row>
-        <Row>
-          <Col className="layout">Submit description</Col>
-          <Col className="layout">Submit button</Col>
         </Row>
       </Container>
     </div>
