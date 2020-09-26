@@ -2,6 +2,12 @@
   background-color: #222222;
 }
 
+.OrderItemDisplay-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .layout {
   background-color: white;
   border: 1px solid gray;

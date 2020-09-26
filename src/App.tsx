@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 
@@ -22,6 +22,14 @@ interface Quality {
 }
 
 interface OrderItem {
+  quality: Quality;
+  diameterMm: number;
+  thicknessMm: number;
+  lengthMm: number;
+  units: number;
+}
+
+interface FormState {
   quality?: Quality;
   diameterMm?: number;
   thicknessMm?: number;
@@ -33,8 +41,8 @@ const getWeight = (diameterMm: number, thicknessMm: number): number => {
   return (diameterMm - thicknessMm) * thicknessMm * 0.0246615;
 };
 
-const isValidOrderItem = (orderItem: OrderItem): boolean => {
-  const { quality, diameterMm, thicknessMm, lengthMm, units } = orderItem;
+const isValidFormState = (formState: FormState): boolean => {
+  const { quality, diameterMm, thicknessMm, lengthMm, units } = formState;
   return (
     quality !== undefined &&
     diameterMm !== undefined &&
@@ -44,7 +52,7 @@ const isValidOrderItem = (orderItem: OrderItem): boolean => {
   );
 };
 
-const ItemSummary: React.FC<{ item: OrderItem }> = ({ item }) => {
+const FormItemSummary: React.FC<{ item: FormState }> = ({ item }) => {
   if (
     item.quality === undefined ||
     item.diameterMm === undefined ||
@@ -71,11 +79,25 @@ const ItemSummary: React.FC<{ item: OrderItem }> = ({ item }) => {
   );
 };
 
+const OrderItemDisplay: React.FC<{ item: OrderItem }> = ({ item }) => {
+  const totalWeight = getWeight(item.diameterMm, item.thicknessMm) * item.units;
+  const totalPrice = (totalWeight * item.quality.priceCents) / 100;
+  return (
+    <div className="OrderItemDisplay-container">
+      <div>
+        {item.units}x {item.quality.label} ({item.diameterMm}mm x{" "}
+        {item.thicknessMm} mm x {item.lengthMm}mm)
+      </div>
+      <div>€{totalPrice.toFixed(2)}</div>
+    </div>
+  );
+};
+
 const App = () => {
-  const [currentItem, setCurrentItem] = useState<OrderItem>({} as OrderItem);
+  const [formState, setFormState] = useState<FormState>({} as FormState);
   const [shouldDeliver, setShouldDeliver] = useState<boolean>(false);
-  const [postCode, setPostCode] = useState<string>("80333");
-  const [orderItems, setOrderItems] = useState<Array<OrderItem>>();
+  const [postCode, setPostCode] = useState<string>();
+  const [orderItems, setOrderItems] = useState<Array<OrderItem>>([]);
 
   const qualityOptions = QUALITIES.map((quality) => {
     const price = (quality.priceCents / 100).toFixed(2);
@@ -86,25 +108,31 @@ const App = () => {
   });
 
   const handleQualityChange = (event: any) =>
-    setCurrentItem({ ...currentItem, quality: event.value });
+    setFormState({ ...formState, quality: event.value });
 
   const handleDiameterChange = (event: any) =>
-    setCurrentItem({ ...currentItem, diameterMm: Number(event.target.value) });
+    setFormState({ ...formState, diameterMm: Number(event.target.value) });
 
   const handleThicknessChange = (event: any) =>
-    setCurrentItem({ ...currentItem, thicknessMm: Number(event.target.value) });
+    setFormState({ ...formState, thicknessMm: Number(event.target.value) });
 
   const handleLengthChange = (event: any) =>
-    setCurrentItem({ ...currentItem, lengthMm: Number(event.target.value) });
+    setFormState({ ...formState, lengthMm: Number(event.target.value) });
 
   const handleUnitsChange = (event: any) =>
-    setCurrentItem({ ...currentItem, units: Number(event.target.value) });
+    setFormState({ ...formState, units: Number(event.target.value) });
 
   const handleShouldDeliverChange = (event: any) =>
     setShouldDeliver(!shouldDeliver);
 
   const handlePostCodeChange = (event: any) => {
     console.log(">>> event", event);
+  };
+
+  const handleAddItemClick = (event: any) => {
+    event.preventDefault();
+    if (!isValidFormState(formState)) return;
+    setOrderItems([...orderItems, formState as OrderItem]);
   };
 
   return (
@@ -194,7 +222,7 @@ const App = () => {
                 </Col>
               </Form.Group>
 
-              <ItemSummary item={currentItem} />
+              <FormItemSummary item={formState} />
               <hr />
 
               <Form.Group controlId="addItemFormShouldDeliver">
@@ -216,20 +244,31 @@ const App = () => {
                       <Form.Control
                         type="string"
                         onChange={handlePostCodeChange}
-                        defaultValue="80333"
                       />
                     </InputGroup>
                   </Col>
                 </Form.Group>
               )}
 
-              <Button variant="primary" type="submit" block>
+              <Button
+                variant="primary"
+                type="button"
+                block
+                disabled={!isValidFormState(formState)}
+                onClick={handleAddItemClick}
+              >
                 Add item
               </Button>
             </Form>
           </Col>
           <Col className="layout">
-            <Row>Order items</Row>
+            {orderItems.map((item) => (
+              <Row>
+                <Col>
+                  <OrderItemDisplay item={item} />
+                </Col>
+              </Row>
+            ))}
             <Row>Summary</Row>
           </Col>
         </Row>
