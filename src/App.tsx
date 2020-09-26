@@ -41,6 +41,26 @@ const getWeight = (diameterMm: number, thicknessMm: number): number => {
   return (diameterMm - thicknessMm) * thicknessMm * 0.0246615;
 };
 
+const getOrderItemWeight = (orderItem: OrderItem): number => {
+  return (
+    getWeight(orderItem.diameterMm, orderItem.thicknessMm) * orderItem.units
+  );
+};
+
+const getOrderItemCost = (orderItem: OrderItem): number => {
+  const itemWeight = getOrderItemWeight(orderItem);
+  return (itemWeight * orderItem.quality.priceCents) / 100;
+};
+
+const getDeliveryCost = (
+  totalWeightKg: number,
+  postCode: string,
+  shouldDeliver: boolean
+): number => {
+  if (!shouldDeliver) return 0;
+  return 1000;
+};
+
 const isValidFormState = (formState: FormState): boolean => {
   const { quality, diameterMm, thicknessMm, lengthMm, units } = formState;
   return (
@@ -74,7 +94,7 @@ const FormItemSummary: React.FC<{ item: FormState }> = ({ item }) => {
       <div>
         Total weight: {totalWeight.toFixed(2)} {item.quality.unit}
       </div>
-      <div>Total price: €{totalPrice.toFixed(2)}</div>
+      <div>Total price: € {totalPrice.toFixed(2)}</div>
     </>
   );
 };
@@ -83,20 +103,68 @@ const OrderItemDisplay: React.FC<{ item: OrderItem }> = ({ item }) => {
   const totalWeight = getWeight(item.diameterMm, item.thicknessMm) * item.units;
   const totalPrice = (totalWeight * item.quality.priceCents) / 100;
   return (
-    <div className="OrderItemDisplay-container">
+    <div className="OrderSummaryRow-container">
       <div>
         {item.units}x {item.quality.label} ({item.diameterMm}mm x{" "}
         {item.thicknessMm} mm x {item.lengthMm}mm)
       </div>
-      <div>€{totalPrice.toFixed(2)}</div>
+      <div>€ {totalPrice.toFixed(2)}</div>
     </div>
+  );
+};
+
+const TotalPriceDisplay: React.FC<{
+  orderItems: OrderItem[];
+  shouldDeliver: boolean;
+  postCode: string;
+}> = ({ orderItems, shouldDeliver, postCode }) => {
+  if (orderItems.length === 0) return null;
+
+  const totalWeight = orderItems
+    .map(getOrderItemWeight)
+    .reduce((acc, weight) => acc + weight, 0);
+
+  const totalMaterialCost = orderItems
+    .map(getOrderItemCost)
+    .reduce((acc, cost) => acc + cost, 0);
+
+  const totalDeliveryCost = getDeliveryCost(
+    totalWeight,
+    postCode,
+    shouldDeliver
+  );
+
+  const totalCost = totalMaterialCost + totalDeliveryCost;
+
+  return (
+    <>
+      <hr />
+      <div className="OrderSummaryRow-container">
+        <div>Material:</div>
+        <div>€ {totalMaterialCost.toFixed(2)}</div>
+      </div>
+      <div className="OrderSummaryRow-container">
+        <div>Weight:</div>
+        <div>{totalWeight.toFixed(2)} Kg</div>
+      </div>
+      {shouldDeliver && (
+        <div className="OrderSummaryRow-container">
+          <div>Delivery:</div>
+          <div>€ {totalDeliveryCost.toFixed(2)}</div>
+        </div>
+      )}
+      <div className="OrderSummaryRow-container">
+        <div>Total:</div>
+        <div>€ {totalCost.toFixed(2)}</div>
+      </div>
+    </>
   );
 };
 
 const App = () => {
   const [formState, setFormState] = useState<FormState>({} as FormState);
   const [shouldDeliver, setShouldDeliver] = useState<boolean>(false);
-  const [postCode, setPostCode] = useState<string>();
+  const [postCode, setPostCode] = useState<string>("");
   const [orderItems, setOrderItems] = useState<Array<OrderItem>>([]);
 
   const qualityOptions = QUALITIES.map((quality) => {
@@ -125,9 +193,7 @@ const App = () => {
   const handleShouldDeliverChange = (event: any) =>
     setShouldDeliver(!shouldDeliver);
 
-  const handlePostCodeChange = (event: any) => {
-    console.log(">>> event", event);
-  };
+  const handlePostCodeChange = (event: any) => setPostCode(event.target.value);
 
   const handleAddItemClick = (event: any) => {
     event.preventDefault();
@@ -261,15 +327,27 @@ const App = () => {
               </Button>
             </Form>
           </Col>
-          <Col className="layout">
-            {orderItems.map((item) => (
+          <Col className="layout u-flex u-flexBetween u-flexDirectionColumn">
+            <div>
+              {orderItems.map((item) => (
+                <Row>
+                  <Col>
+                    <OrderItemDisplay item={item} />
+                  </Col>
+                </Row>
+              ))}
+            </div>
+            <div>
               <Row>
                 <Col>
-                  <OrderItemDisplay item={item} />
+                  <TotalPriceDisplay
+                    orderItems={orderItems}
+                    shouldDeliver={shouldDeliver}
+                    postCode={postCode}
+                  />
                 </Col>
               </Row>
-            ))}
-            <Row>Summary</Row>
+            </div>
           </Col>
         </Row>
       </Container>

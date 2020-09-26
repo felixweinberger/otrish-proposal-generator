@@ -2,7 +2,7 @@
   background-color: #222222;
 }
 
-.OrderItemDisplay-container {
+.OrderSummaryRow-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -24,4 +24,73 @@
 .AddItemForm {
   padding-top: 15px;
   padding-bottom: 15px;
+}
+
+/* Flexbox */
+.u-flex {
+  display: flex !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.u-flexInline {
+  display: inline-flex;
+}
+
+.u-flex1 {
+  flex: 1;
+}
+
+.u-flexShrink0 {
+  flex-shrink: 0;
+}
+
+.u-flexAlignItemsCenter {
+  align-items: center;
+}
+
+.u-flexAlignItemsBaseline {
+  align-items: baseline;
+}
+
+.u-flexAlignItemsStart {
+  align-items: flex-start;
+}
+
+.u-flexAlignItemsEnd {
+  align-items: flex-end;
+}
+
+.u-flexAlignItemsStretch {
+  align-items: stretch;
+}
+
+.u-flexJustifyStart {
+  justify-content: flex-start;
+}
+
+.u-flexJustifyCenter {
+  justify-content: center;
+}
+
+.u-flexBetween {
+  justify-content: space-between;
+}
+
+.u-flexAround {
+  justify-content: space-around;
+}
+
+.u-flexJustifyEnd {
+  justify-content: flex-end;
+}
+
+.u-flexDirectionColumn {
+  flex-direction: column;
+}
+
+.u-flexDirectionColumnReverse {
+  flex-direction: column-reverse;
+}
+
+.u-flexWrap {
+  flex-wrap: wrap;
 }
