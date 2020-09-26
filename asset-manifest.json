@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/otrish-proposal-manager/static/css/main.6852b38b.chunk.css",
+    "main.js": "/otrish-proposal-manager/static/js/main.72bbe368.chunk.js",
+    "main.js.map": "/otrish-proposal-manager/static/js/main.72bbe368.chunk.js.map",
+    "runtime-main.js": "/otrish-proposal-manager/static/js/runtime-main.37e89c16.js",
+    "runtime-main.js.map": "/otrish-proposal-manager/static/js/runtime-main.37e89c16.js.map",
+    "static/css/2.d9ad5f5c.chunk.css": "/otrish-proposal-manager/static/css/2.d9ad5f5c.chunk.css",
+    "static/js/2.9c163893.chunk.js": "/otrish-proposal-manager/static/js/2.9c163893.chunk.js",
+    "static/js/2.9c163893.chunk.js.map": "/otrish-proposal-manager/static/js/2.9c163893.chunk.js.map",
+    "index.html": "/otrish-proposal-manager/index.html",
+    "precache-manifest.a08db15c7947a115c3475aaaf135b608.js": "/otrish-proposal-manager/precache-manifest.a08db15c7947a115c3475aaaf135b608.js",
+    "service-worker.js": "/otrish-proposal-manager/service-worker.js",
+    "static/css/2.d9ad5f5c.chunk.css.map": "/otrish-proposal-manager/static/css/2.d9ad5f5c.chunk.css.map",
+    "static/css/main.6852b38b.chunk.css.map": "/otrish-proposal-manager/static/css/main.6852b38b.chunk.css.map",
+    "static/js/2.9c163893.chunk.js.LICENSE.txt": "/otrish-proposal-manager/static/js/2.9c163893.chunk.js.LICENSE.txt",
+    "static/media/otrish-logo.png": "/otrish-proposal-manager/static/media/otrish-logo.14c5b1bd.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.37e89c16.js",
+    "static/css/2.d9ad5f5c.chunk.css",
+    "static/js/2.9c163893.chunk.js",
+    "static/css/main.6852b38b.chunk.css",
+    "static/js/main.72bbe368.chunk.js"
+  ]
+}
